@@ -20,12 +20,10 @@ public class OpcionMenuService {
             JOIN ESTADO E ON E.ID_ESTADO = O.ID_ESTADO
             """;
 
-    private static final RowMapper<OpcionMenuResponse> MAPPER = (rs, n) -> {
-        long padre = rs.getLong("ID_OPCION_PADRE");
-        return new OpcionMenuResponse(rs.getLong("ID_OPCION"), rs.wasNull() ? null : padre, rs.getString("PADRE"),
-                rs.getString("NOMBRE"), rs.getString("RUTA"), rs.getString("ICONO"), rs.getInt("ORDEN"),
-                rs.getString("ESTADO"));
-    };
+    private static final RowMapper<OpcionMenuResponse> MAPPER = (rs, n) -> new OpcionMenuResponse(
+            rs.getLong("ID_OPCION"), rs.getObject("ID_OPCION_PADRE", Long.class), rs.getString("PADRE"),
+            rs.getString("NOMBRE"), rs.getString("RUTA"), rs.getString("ICONO"), rs.getInt("ORDEN"),
+            rs.getString("ESTADO"));
 
     private final JdbcTemplate jdbc;
 

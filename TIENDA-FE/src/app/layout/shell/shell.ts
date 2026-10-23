@@ -1,3 +1,4 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -41,6 +42,14 @@ export class Shell {
   private readonly actual = computed(() => this.menu.opciones().find((o) => o.ruta === this.url()));
   private readonly abiertos = signal(new Set<number>());
 
+  protected readonly movil = toSignal(
+    inject(BreakpointObserver)
+      .observe('(max-width: 899px)')
+      .pipe(map((estado) => estado.matches)),
+    { initialValue: false },
+  );
+  protected readonly menuAbierto = signal(false);
+
   protected readonly migas = computed(() => {
     const actual = this.actual();
     if (!actual) {
@@ -53,11 +62,19 @@ export class Shell {
   constructor() {
     this.menu.cargar();
     effect(() => {
+      this.url();
+      this.menuAbierto.set(false);
+    });
+    effect(() => {
       const padre = this.actual()?.idOpcionPadre;
       if (padre != null) {
         this.abiertos.update((abiertos) => new Set(abiertos).add(padre));
       }
     });
+  }
+
+  protected contieneActual(nodo: MenuNodo) {
+    return nodo.hijos.some((h) => h.ruta === this.url());
   }
 
   protected expandido(nodo: MenuNodo) {

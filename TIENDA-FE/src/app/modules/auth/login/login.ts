@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { AuthService } from '../../../core/auth.service';
-import { Notificacion, mensajeError } from '../../../shared/notificacion.service';
+import { mensajeError } from '../../../shared/notificacion.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +15,6 @@ import { Notificacion, mensajeError } from '../../../shared/notificacion.service
 export class Login {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly notificacion = inject(Notificacion);
 
   protected readonly cargando = signal(false);
   protected readonly verPassword = signal(false);
@@ -44,9 +43,5 @@ export class Login {
         next: () => this.router.navigateByUrl('/'),
         error: (error) => this.error.set(mensajeError(error)),
       });
-  }
-
-  protected recuperar() {
-    this.notificacion.exito('Comuníquese con el administrador del sistema para restablecer su contraseña.');
   }
 }

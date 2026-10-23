@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 
-export abstract class CrudService<T, R> {
+export type Valores = Record<string, unknown>;
+
+export abstract class CrudService<T> {
   protected readonly http = inject(HttpClient);
   protected abstract readonly url: string;
 
@@ -13,11 +15,11 @@ export abstract class CrudService<T, R> {
     return this.http.get<T>(`${this.url}/${id}`);
   }
 
-  crear(request: R) {
+  crear(request: Valores) {
     return this.http.post<T>(this.url, request);
   }
 
-  actualizar(id: number, request: R) {
+  actualizar(id: number, request: Valores) {
     return this.http.put<T>(`${this.url}/${id}`, request);
   }
 

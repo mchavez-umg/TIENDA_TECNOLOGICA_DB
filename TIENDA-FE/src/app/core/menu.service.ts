@@ -28,7 +28,7 @@ export class MenuService {
     });
   }
 
-  permisos(ruta: string) {
-    return computed(() => this.opciones().find((o) => o.ruta === ruta));
+  opcion(ruta: string) {
+    return this.opciones().find((o) => o.ruta === ruta);
   }
 }

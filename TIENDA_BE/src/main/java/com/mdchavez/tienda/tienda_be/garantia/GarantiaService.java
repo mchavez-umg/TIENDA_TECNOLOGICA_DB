@@ -27,15 +27,12 @@ public class GarantiaService {
             JOIN ESTADO E ON E.ID_ESTADO = G.ID_ESTADO
             """;
 
-    private static final RowMapper<GarantiaResponse> MAPPER = (rs, n) -> {
-        long idReemplazo = rs.getLong("ID_PRODUCTO_REEMPLAZO");
-        return new GarantiaResponse(
-                rs.getLong("ID_GARANTIA"), rs.getLong("ID_DETALLE_FACTURA"), rs.getString("PRODUCTO"),
-                rs.getString("DESCRIPCION_FALLA"), rs.getString("TIPO_RESOLUCION"),
-                rs.wasNull() ? null : idReemplazo, rs.getString("PRODUCTO_REEMPLAZO"),
-                rs.getObject("FECHA_RECLAMO", LocalDate.class), rs.getObject("FECHA_RESOLUCION", LocalDate.class),
-                rs.getString("OBSERVACIONES"), rs.getString("ESTADO"));
-    };
+    private static final RowMapper<GarantiaResponse> MAPPER = (rs, n) -> new GarantiaResponse(
+            rs.getLong("ID_GARANTIA"), rs.getLong("ID_DETALLE_FACTURA"), rs.getString("PRODUCTO"),
+            rs.getString("DESCRIPCION_FALLA"), rs.getString("TIPO_RESOLUCION"),
+            rs.getObject("ID_PRODUCTO_REEMPLAZO", Long.class), rs.getString("PRODUCTO_REEMPLAZO"),
+            rs.getObject("FECHA_RECLAMO", LocalDate.class), rs.getObject("FECHA_RESOLUCION", LocalDate.class),
+            rs.getString("OBSERVACIONES"), rs.getString("ESTADO"));
 
     private final JdbcTemplate jdbc;
     private final UsuarioActual usuarioActual;

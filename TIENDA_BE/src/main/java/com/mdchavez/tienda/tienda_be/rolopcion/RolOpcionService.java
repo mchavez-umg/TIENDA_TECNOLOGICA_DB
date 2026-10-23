@@ -11,11 +11,9 @@ import java.util.List;
 @Service
 public class RolOpcionService {
 
-    private static final RowMapper<OpcionMenu> OPCION = (rs, n) -> {
-        long padre = rs.getLong("ID_OPCION_PADRE");
-        return new OpcionMenu(rs.getLong("ID_OPCION"), rs.wasNull() ? null : padre, rs.getString("NOMBRE"),
-                rs.getString("RUTA"), rs.getInt("ORDEN"));
-    };
+    private static final RowMapper<OpcionMenu> OPCION = (rs, n) -> new OpcionMenu(rs.getLong("ID_OPCION"),
+            rs.getObject("ID_OPCION_PADRE", Long.class), rs.getString("NOMBRE"), rs.getString("RUTA"),
+            rs.getInt("ORDEN"));
 
     private static final RowMapper<RolOpcionResponse> ROL_OPCION = (rs, n) -> new RolOpcionResponse(
             rs.getLong("ID_OPCION"), rs.getString("OPCION"), rs.getString("RUTA"), rs.getString("PUEDE_CONSULTAR"),

@@ -32,19 +32,16 @@ public class MenuService {
 
     public List<MenuOpcion> menuDelUsuario() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return jdbc.query(SQL, (rs, n) -> {
-            long padre = rs.getLong("ID_OPCION_PADRE");
-            return new MenuOpcion(
-                    rs.getLong("ID_OPCION"),
-                    rs.wasNull() ? null : padre,
-                    rs.getString("NOMBRE"),
-                    rs.getString("RUTA"),
-                    rs.getString("ICONO"),
-                    rs.getInt("ORDEN"),
-                    "S".equals(rs.getString("PUEDE_CREAR")),
-                    "S".equals(rs.getString("PUEDE_EDITAR")),
-                    "S".equals(rs.getString("PUEDE_ELIMINAR")));
-        }, username);
+        return jdbc.query(SQL, (rs, n) -> new MenuOpcion(
+                rs.getLong("ID_OPCION"),
+                rs.getObject("ID_OPCION_PADRE", Long.class),
+                rs.getString("NOMBRE"),
+                rs.getString("RUTA"),
+                rs.getString("ICONO"),
+                rs.getInt("ORDEN"),
+                "S".equals(rs.getString("PUEDE_CREAR")),
+                "S".equals(rs.getString("PUEDE_EDITAR")),
+                "S".equals(rs.getString("PUEDE_ELIMINAR"))), username);
     }
 
     public record MenuOpcion(long idOpcion, Long idOpcionPadre, String nombre, String ruta, String icono,

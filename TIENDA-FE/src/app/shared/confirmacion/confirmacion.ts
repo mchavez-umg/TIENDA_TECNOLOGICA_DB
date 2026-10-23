@@ -7,6 +7,7 @@ export interface DatosConfirmacion {
   titulo: string;
   mensaje: string;
   accion: string;
+  peligro?: boolean;
 }
 
 @Component({
@@ -16,8 +17,10 @@ export interface DatosConfirmacion {
     <h2 mat-dialog-title>{{ datos.titulo }}</h2>
     <mat-dialog-content>{{ datos.mensaje }}</mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Cancelar</button>
-      <button mat-flat-button [mat-dialog-close]="true" cdkFocusInitial>{{ datos.accion }}</button>
+      <button mat-button mat-dialog-close cdkFocusInitial>Cancelar</button>
+      <button mat-flat-button [class.boton-peligro]="datos.peligro" [mat-dialog-close]="true">
+        {{ datos.accion }}
+      </button>
     </mat-dialog-actions>
   `,
 })

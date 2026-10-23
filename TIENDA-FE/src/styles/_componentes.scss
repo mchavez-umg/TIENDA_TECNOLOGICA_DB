@@ -1,34 +1,49 @@
 @use '@angular/material' as mat;
 
+.oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .pagina-encabezado {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px 16px;
   margin-bottom: 20px;
 
   h1 {
     margin: 0;
-    font-size: 22px;
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
   p {
     margin: 4px 0 0;
     color: var(--app-texto-sec);
   }
+
+  .resumen {
+    font-variant-numeric: tabular-nums;
+  }
 }
 
 .tarjeta-tabla {
   overflow: hidden;
-  background: #fff;
+  background: var(--app-superficie);
 }
 
 .tabla-filtros {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  padding: 16px;
+  padding: 16px 16px 12px;
 }
 
 .buscador {
@@ -48,13 +63,15 @@
   width: 100%;
 
   .mat-mdc-header-cell {
-    background: var(--app-cabecera-tabla);
+    background: var(--app-superficie);
     color: var(--app-texto-sec);
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 500;
+    border-bottom-color: var(--app-borde);
   }
 
-  .mat-mdc-row:hover .mat-mdc-cell {
-    background: var(--app-cabecera-tabla);
+  .mat-mdc-cell {
+    border-bottom-color: var(--app-regla);
   }
 
   .col-codigo {
@@ -63,12 +80,27 @@
   }
 
   .col-estado {
-    width: 140px;
+    width: 110px;
   }
 
   .col-acciones {
-    width: 120px;
+    width: 1%;
+    white-space: nowrap;
     text-align: right;
+  }
+
+  .col-numero {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+
+    .mat-sort-header-container {
+      justify-content: flex-end;
+    }
+  }
+
+  .col-fecha {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
   }
 }
 
@@ -76,16 +108,21 @@
   padding: 32px 16px;
   color: var(--app-texto-sec);
   text-align: center;
+
+  button {
+    margin-left: 8px;
+  }
 }
 
 .estado {
   display: inline-block;
-  padding: 2px 10px;
+  padding: 2px 8px;
   border-radius: 4px;
   background: var(--app-exito-fondo);
   color: var(--app-exito);
   font-size: 12px;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .estado-inactivo {
@@ -97,8 +134,32 @@
   width: 100%;
 }
 
-.mat-mdc-dialog-content .campo-completo:first-child {
-  margin-top: 8px;
+.formulario-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+  padding-top: 8px;
+
+  &.una-columna {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .campo-completo {
+    grid-column: 1 / -1;
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.boton-peligro {
+  @include mat.button-overrides(
+    (
+      filled-container-color: var(--app-error),
+      filled-label-text-color: #fff,
+    )
+  );
 }
 
 .snack-error {
