@@ -1,7 +1,7 @@
 package com.mdchavez.tienda.tienda_be.venta;
 
+import com.mdchavez.tienda.tienda_be.seguridad.UsuarioActual;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,14 +13,16 @@ import java.sql.Types;
 public class VentaService {
 
     private final JdbcTemplate jdbc;
+    private final UsuarioActual usuarioActual;
 
-    public VentaService(JdbcTemplate jdbc) {
+    public VentaService(JdbcTemplate jdbc, UsuarioActual usuarioActual) {
         this.jdbc = jdbc;
+        this.usuarioActual = usuarioActual;
     }
 
     @Transactional
     public VentaResponse registrar(VentaRequest req) {
-        long idEmpleado = idEmpleadoDelUsuario();
+        long idEmpleado = usuarioActual.idEmpleado();
 
         long idFactura = jdbc.execute(
                 (java.sql.Connection con) -> {
@@ -54,11 +56,6 @@ public class VentaService {
                 (rs, n) -> new VentaResponse(rs.getLong("ID_FACTURA"), rs.getString("SERIE"),
                         rs.getLong("NUMERO"), rs.getBigDecimal("TOTAL")),
                 idFactura);
-    }
-
-    private long idEmpleadoDelUsuario() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return jdbc.queryForObject("SELECT ID_EMPLEADO FROM USUARIO WHERE USERNAME = ?", Long.class, username);
     }
 
     public record VentaResponse(long idFactura, String serie, long numero, BigDecimal total) {
