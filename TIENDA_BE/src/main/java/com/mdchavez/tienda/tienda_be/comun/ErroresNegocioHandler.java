@@ -22,11 +22,28 @@ public class ErroresNegocioHandler {
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<Map<String, String>> accesoDatos(DataAccessException e) {
         for (Throwable t = e; t != null; t = t.getCause()) {
-            if (t instanceof SQLException sql && sql.getErrorCode() >= 20000 && sql.getErrorCode() <= 20999) {
-                return ResponseEntity.badRequest().body(Map.of("mensaje", mensajeLimpio(sql)));
+            if (t instanceof SQLException sql) {
+                int code = sql.getErrorCode();
+                if (code >= 20000 && code <= 20999) {
+                    return ResponseEntity.badRequest().body(Map.of("mensaje", mensajeLimpio(sql)));
+                }
+                String restriccion = mensajeRestriccion(code);
+                if (restriccion != null) {
+                    return ResponseEntity.badRequest().body(Map.of("mensaje", restriccion));
+                }
             }
         }
         throw e;
+    }
+
+    private static String mensajeRestriccion(int code) {
+        return switch (code) {
+            case 1 -> "Ya existe un registro con ese valor único";
+            case 2290 -> "Un valor no cumple una regla de validación";
+            case 2291 -> "Referencia inválida: el registro relacionado no existe";
+            case 2292 -> "No se puede eliminar: tiene registros relacionados";
+            default -> null;
+        };
     }
 
     private static String mensajeLimpio(SQLException sql) {
