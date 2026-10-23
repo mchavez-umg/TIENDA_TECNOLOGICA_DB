@@ -8,6 +8,8 @@ export interface Columna {
   titulo: string;
   tipo?: TipoColumna;
   clase?: string;
+  total?: boolean;
+  barra?: boolean;
 }
 
 export type TipoCampo =
@@ -45,12 +47,15 @@ export interface Campo {
   completo?: boolean;
 }
 
-export type Permiso = 'puedeCrear' | 'puedeEditar' | 'puedeEliminar';
+export type Permiso = 'consultar' | 'puedeCrear' | 'puedeEditar' | 'puedeEliminar';
+
+export type TonoEstado = 'exito' | 'aviso' | 'inactivo';
 
 export interface AccionExtra<T> {
   icono: string;
   texto: string;
   permiso: Permiso;
+  visible?: (fila: T) => boolean;
   ejecutar: (fila: T, recargar: () => void) => void;
 }
 
@@ -66,7 +71,16 @@ export interface CrudConfig<T> {
   columnas: Columna[];
   campos: Campo[];
   acciones?: AccionExtra<T>[];
+  nuevoRuta?: string;
+  alCrear?: (recargar: () => void) => void;
+  editable?: boolean;
+  desactivable?: boolean;
+  tonoEstado?: (estado: string) => TonoEstado;
+  resumen?: (filas: T[]) => string;
 }
+
+export const activos = <T extends { estado: string }>(filas: T[]) =>
+  filas.filter((fila) => fila.estado === 'Activo');
 
 export function opcionesDe<T extends { estado: string }>(
   servicio: CrudService<T>,

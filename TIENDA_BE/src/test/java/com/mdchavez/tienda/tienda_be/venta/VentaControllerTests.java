@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.Instant;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,6 +58,23 @@ class VentaControllerTests {
                                 "\"lineas\":[{\"idProducto\":1,\"cantidad\":1}]," +
                                 "\"pagos\":[{\"idFormaPago\":1,\"monto\":10}]}"))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void listarSinPermisoDevuelve403() throws Exception {
+        mvc.perform(get("/api/ventas").header("Authorization", "Bearer " + token()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void detalleSinPermisoDevuelve403() throws Exception {
+        mvc.perform(get("/api/ventas/1").header("Authorization", "Bearer " + token()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void listarSinTokenDevuelve401() throws Exception {
+        mvc.perform(get("/api/ventas")).andExpect(status().isUnauthorized());
     }
 
     @Test

@@ -25,7 +25,8 @@ import { MenuService } from '../../core/menu.service';
 import { Confirmacion } from '../confirmacion/confirmacion';
 import { anchoFormulario, FormularioDialogo } from '../formulario/formulario-dialogo';
 import { Notificacion } from '../notificacion.service';
-import { Columna, CrudConfig, Permiso } from './crud';
+import { RouterLink } from '@angular/router';
+import { Columna, CrudConfig, Permiso, TonoEstado } from './crud';
 
 type Fila = Record<string, any>;
 
@@ -34,6 +35,7 @@ type Fila = Record<string, any>;
   imports: [
     CurrencyPipe,
     DatePipe,
+    RouterLink,
     MatCardModule,
     MatTableModule,
     MatSortModule,
@@ -58,8 +60,13 @@ export class CrudPagina implements OnInit, AfterViewInit {
   private readonly paginador = viewChild.required(MatPaginator);
 
   protected readonly permisos = computed(() => this.menu.opcion(this.config().ruta));
+  protected readonly editable = computed(() => this.config().editable !== false);
+  protected readonly desactivable = computed(() => this.config().desactivable !== false);
   protected readonly conAcciones = computed(
-    () => !!(this.permisos()?.puedeEditar || this.permisos()?.puedeEliminar),
+    () =>
+      (this.editable() && this.puede('puedeEditar')) ||
+      (this.desactivable() && this.puede('puedeEliminar')) ||
+      (this.config().acciones ?? []).some((a) => this.puede(a.permiso)),
   );
   protected readonly columnas = computed(() => [
     ...this.config().columnas.map((c) => c.campo),
@@ -77,6 +84,10 @@ export class CrudPagina implements OnInit, AfterViewInit {
   protected readonly filas = signal<Fila[]>([]);
   protected readonly resumen = computed(() => {
     const filas = this.filas();
+    const propio = this.config().resumen;
+    if (propio) {
+      return propio(filas);
+    }
     const activos = filas.filter((f) => f['estado'] === 'Activo').length;
     return `${filas.length} en total · ${activos} activ${this.articulo()}s`;
   });
@@ -91,7 +102,12 @@ export class CrudPagina implements OnInit, AfterViewInit {
   }
 
   protected puede(permiso: Permiso) {
-    return !!this.permisos()?.[permiso];
+    const permisos = this.permisos();
+    return permiso === 'consultar' ? !!permisos : !!permisos?.[permiso];
+  }
+
+  protected tono(estado: string): TonoEstado {
+    return this.config().tonoEstado?.(estado) ?? (estado === 'Activo' ? 'exito' : 'inactivo');
   }
 
   protected clase(columna: Columna) {
@@ -117,6 +133,9 @@ export class CrudPagina implements OnInit, AfterViewInit {
 
   protected abrir(fila?: Fila) {
     const config = this.config();
+    if (!fila && config.alCrear) {
+      return config.alCrear(this.recargar);
+    }
     const a = this.articulo();
     const nombre = this.nombre();
     this.dialog

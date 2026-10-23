@@ -9,10 +9,17 @@
     </p>
   </div>
   @if (puede('puedeCrear')) {
-    <button mat-flat-button (click)="abrir()">
-      <mat-icon>add</mat-icon>
-      Nuev{{ articulo() }} {{ config().singular }}
-    </button>
+    @if (config().nuevoRuta; as ruta) {
+      <a mat-flat-button [routerLink]="ruta">
+        <mat-icon>add</mat-icon>
+        Nuev{{ articulo() }} {{ config().singular }}
+      </a>
+    } @else {
+      <button mat-flat-button (click)="abrir()">
+        <mat-icon>add</mat-icon>
+        Nuev{{ articulo() }} {{ config().singular }}
+      </button>
+    }
   }
 </header>
 
@@ -46,7 +53,11 @@
           <td mat-cell *matCellDef="let fila" [class]="clase(columna)">
             @switch (columna.tipo) {
               @case ('estado') {
-                <span class="estado" [class.estado-inactivo]="fila[columna.campo] !== 'Activo'">
+                <span
+                  class="estado"
+                  [class.estado-inactivo]="tono(fila[columna.campo]) === 'inactivo'"
+                  [class.estado-aviso]="tono(fila[columna.campo]) === 'aviso'"
+                >
                   {{ fila[columna.campo] }}
                 </span>
               }
@@ -75,7 +86,7 @@
           <span class="oculto">Acciones</span>
         </th>
         <td mat-cell *matCellDef="let fila" class="col-acciones">
-          @if (puede('puedeEditar')) {
+          @if (editable() && puede('puedeEditar')) {
             <button
               mat-icon-button
               matTooltip="Editar"
@@ -86,7 +97,7 @@
             </button>
           }
           @for (accion of config().acciones ?? []; track accion.texto) {
-            @if (puede(accion.permiso)) {
+            @if (puede(accion.permiso) && (!accion.visible || accion.visible(fila))) {
               <button
                 mat-icon-button
                 [matTooltip]="accion.texto"
@@ -97,7 +108,7 @@
               </button>
             }
           }
-          @if (puede('puedeEliminar') && fila.estado === 'Activo') {
+          @if (desactivable() && puede('puedeEliminar') && fila.estado === 'Activo') {
             <button
               mat-icon-button
               matTooltip="Desactivar"

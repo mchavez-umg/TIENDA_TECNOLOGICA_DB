@@ -1,7 +1,8 @@
 import { Component, inject, Injectable } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { map } from 'rxjs';
+import { filter, map, Observable, switchMap } from 'rxjs';
+import { Notificacion } from '../notificacion.service';
 
 export interface DatosConfirmacion {
   titulo: string;
@@ -31,11 +32,24 @@ export class ConfirmacionDialogo {
 @Injectable({ providedIn: 'root' })
 export class Confirmacion {
   private readonly dialog = inject(MatDialog);
+  private readonly notificacion = inject(Notificacion);
 
   preguntar(datos: DatosConfirmacion) {
     return this.dialog
       .open(ConfirmacionDialogo, { data: datos, width: '420px' })
       .afterClosed()
       .pipe(map(Boolean));
+  }
+
+  ejecutar(datos: DatosConfirmacion, accion: () => Observable<unknown>, exito: string, alTerminar: () => void) {
+    this.preguntar(datos)
+      .pipe(filter(Boolean), switchMap(accion))
+      .subscribe({
+        next: () => {
+          this.notificacion.exito(exito);
+          alTerminar();
+        },
+        error: (error) => this.notificacion.error(error),
+      });
   }
 }

@@ -106,9 +106,9 @@ export class FormularioDialogo {
       .guardar(valoresAEnviar(this.campos, this.form.getRawValue()))
       .pipe(finalize(() => this.guardando.set(false)))
       .subscribe({
-        next: () => {
+        next: (resultado) => {
           this.notificacion.exito(this.datos.mensajeExito);
-          this.ref.close(true);
+          this.ref.close(resultado ?? true);
         },
         error: (error) => this.notificacion.error(error),
       });

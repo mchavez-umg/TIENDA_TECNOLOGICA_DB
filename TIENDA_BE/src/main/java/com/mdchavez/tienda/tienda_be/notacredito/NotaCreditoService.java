@@ -20,15 +20,18 @@ public class NotaCreditoService {
 
     private static final String SELECT_CABECERA = """
             SELECT N.ID_NOTA_CREDITO, N.ID_FACTURA, N.SERIE, N.NUMERO, N.FECHA, N.MOTIVO, N.TOTAL,
-                   E.NOMBRE AS ESTADO
+                   E.NOMBRE AS ESTADO, F.SERIE || '-' || F.NUMERO AS FACTURA,
+                   C.NOMBRES || NVL2(C.APELLIDOS, ' ' || C.APELLIDOS, '') AS CLIENTE
             FROM NOTA_CREDITO N
             JOIN ESTADO E ON E.ID_ESTADO = N.ID_ESTADO
+            JOIN FACTURA F ON F.ID_FACTURA = N.ID_FACTURA
+            JOIN CLIENTE C ON C.ID_CLIENTE = F.ID_CLIENTE
             """;
 
     private static final RowMapper<NotaResumen> RESUMEN = (rs, n) -> new NotaResumen(
             rs.getLong("ID_NOTA_CREDITO"), rs.getLong("ID_FACTURA"), rs.getString("SERIE"), rs.getLong("NUMERO"),
             rs.getObject("FECHA", LocalDate.class), rs.getString("MOTIVO"), rs.getBigDecimal("TOTAL"),
-            rs.getString("ESTADO"));
+            rs.getString("ESTADO"), rs.getString("FACTURA"), rs.getString("CLIENTE"));
 
     private final JdbcTemplate jdbc;
     private final UsuarioActual usuarioActual;
@@ -90,7 +93,7 @@ public class NotaCreditoService {
     }
 
     public record NotaResumen(long idNotaCredito, long idFactura, String serie, long numero, LocalDate fecha,
-                              String motivo, BigDecimal total, String estado) {
+                              String motivo, BigDecimal total, String estado, String factura, String cliente) {
     }
 
     public record Linea(long idDetalleFactura, String producto, int cantidad, BigDecimal monto,

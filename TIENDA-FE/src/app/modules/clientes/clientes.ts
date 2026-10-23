@@ -1,8 +1,17 @@
 import { Component, inject } from '@angular/core';
 import { Cliente } from '../../data/models/comercial';
 import { ClienteService } from '../../data/services/comercial.service';
-import { CrudConfig } from '../../shared/crud/crud';
+import { Campo, CrudConfig } from '../../shared/crud/crud';
 import { CrudPagina } from '../../shared/crud/crud-pagina';
+
+export const CAMPOS_CLIENTE: Campo[] = [
+  { nombre: 'nit', etiqueta: 'NIT', requerido: true, largoMax: 15, completo: true, pista: 'CF si no tiene NIT' },
+  { nombre: 'nombres', etiqueta: 'Nombres', requerido: true, largoMax: 80 },
+  { nombre: 'apellidos', etiqueta: 'Apellidos', largoMax: 80 },
+  { nombre: 'telefono', etiqueta: 'Teléfono', largoMax: 15 },
+  { nombre: 'correo', etiqueta: 'Correo', tipo: 'correo', largoMax: 100 },
+  { nombre: 'direccion', etiqueta: 'Dirección', largoMax: 200, completo: true },
+];
 
 @Component({
   selector: 'app-clientes',
@@ -26,13 +35,6 @@ export class Clientes {
       { campo: 'correo', titulo: 'Correo' },
       { campo: 'estado', titulo: 'Estado', tipo: 'estado' },
     ],
-    campos: [
-      { nombre: 'nit', etiqueta: 'NIT', requerido: true, largoMax: 15, completo: true },
-      { nombre: 'nombres', etiqueta: 'Nombres', requerido: true, largoMax: 80 },
-      { nombre: 'apellidos', etiqueta: 'Apellidos', largoMax: 80 },
-      { nombre: 'telefono', etiqueta: 'Teléfono', largoMax: 15 },
-      { nombre: 'correo', etiqueta: 'Correo', tipo: 'correo', largoMax: 100 },
-      { nombre: 'direccion', etiqueta: 'Dirección', largoMax: 200, completo: true },
-    ],
+    campos: CAMPOS_CLIENTE,
   };
 }

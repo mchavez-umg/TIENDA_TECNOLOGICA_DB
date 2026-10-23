@@ -37,6 +37,23 @@ export const routes: Routes = [
         loadChildren: () => import('./modules/compras/compras.routes').then((m) => m.COMPRAS_ROUTES),
       },
       {
+        path: 'reportes',
+        loadChildren: () => import('./modules/reportes/reportes.routes').then((m) => m.REPORTES_ROUTES),
+      },
+      {
+        path: 'bitacora',
+        loadComponent: () => import('./modules/bitacora/bitacora').then((m) => m.Bitacora),
+      },
+      {
+        path: 'garantias',
+        loadComponent: () => import('./modules/garantias/garantias').then((m) => m.Garantias),
+      },
+      {
+        path: 'inventario',
+        loadChildren: () =>
+          import('./modules/inventario/inventario.routes').then((m) => m.INVENTARIO_ROUTES),
+      },
+      {
         path: 'clientes',
         loadComponent: () => import('./modules/clientes/clientes').then((m) => m.Clientes),
       },

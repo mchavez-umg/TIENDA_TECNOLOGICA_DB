@@ -39,7 +39,10 @@ export class Shell {
     ),
     { initialValue: this.router.url.split('?')[0] },
   );
-  private readonly actual = computed(() => this.menu.opciones().find((o) => o.ruta === this.url()));
+  private readonly actual = computed(() => {
+    const url = this.url();
+    return this.menu.opciones().find((o) => o.ruta && (url === o.ruta || url.startsWith(o.ruta + '/')));
+  });
   private readonly abiertos = signal(new Set<number>());
 
   protected readonly movil = toSignal(
@@ -74,7 +77,7 @@ export class Shell {
   }
 
   protected contieneActual(nodo: MenuNodo) {
-    return nodo.hijos.some((h) => h.ruta === this.url());
+    return nodo.hijos.some((h) => h.idOpcion === this.actual()?.idOpcion);
   }
 
   protected expandido(nodo: MenuNodo) {
