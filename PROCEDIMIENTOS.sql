@@ -78,19 +78,15 @@ CREATE OR REPLACE PROCEDURE PR_REGISTRAR_PAGO (
     p_no_autorizacion IN VARCHAR2 DEFAULT NULL
 )
 IS
-    v_forma FORMA_PAGO.NOMBRE%TYPE;
-    v_total FACTURA.TOTAL%TYPE;
+    v_requiere FORMA_PAGO.REQUIERE_REFERENCIA%TYPE;
+    v_total    FACTURA.TOTAL%TYPE;
 BEGIN
-    SELECT NOMBRE INTO v_forma
+    SELECT REQUIERE_REFERENCIA INTO v_requiere
     FROM FORMA_PAGO
     WHERE ID_FORMA_PAGO = p_id_forma_pago;
 
-    IF v_forma = 'Transferencia' AND (p_id_banco IS NULL OR p_no_referencia IS NULL) THEN
-        RAISE_APPLICATION_ERROR(-20033, 'Una transferencia requiere banco y número de referencia');
-    END IF;
-
-    IF v_forma = 'Tarjeta' AND p_no_autorizacion IS NULL THEN
-        RAISE_APPLICATION_ERROR(-20034, 'Un pago con tarjeta requiere número de autorización');
+    IF v_requiere = 'S' AND (p_id_banco IS NULL OR (p_no_referencia IS NULL AND p_no_autorizacion IS NULL)) THEN
+        RAISE_APPLICATION_ERROR(-20033, 'Esta forma de pago requiere banco y número de referencia o autorización');
     END IF;
 
     SELECT TOTAL INTO v_total
@@ -166,7 +162,16 @@ IS
     v_id_factura DETALLE_FACTURA.ID_FACTURA%TYPE;
     v_monto      DETALLE_NOTA_CREDITO.MONTO%TYPE;
     v_pendiente  NUMBER;
+    v_id_estado  NOTA_CREDITO.ID_ESTADO%TYPE;
 BEGIN
+    SELECT ID_ESTADO INTO v_id_estado
+    FROM NOTA_CREDITO
+    WHERE ID_NOTA_CREDITO = p_id_nota_credito;
+
+    IF v_id_estado <> FN_ID_ESTADO('NOTA_CREDITO', 'EMITIDA') THEN
+        RAISE_APPLICATION_ERROR(-20044, 'Solo se agregan líneas a una nota de crédito EMITIDA');
+    END IF;
+
     SELECT CANTIDAD, SUBTOTAL, ID_FACTURA INTO v_cantidad, v_subtotal, v_id_factura
     FROM DETALLE_FACTURA
     WHERE ID_DETALLE_FACTURA = p_id_detalle_factura;

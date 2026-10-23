@@ -1746,7 +1746,6 @@ BEGIN
                   || ', ID_DETALLE_FACTURA=' || :NEW.ID_DETALLE_FACTURA
                   || ', ID_EMPLEADO=' || :NEW.ID_EMPLEADO
                   || ', ID_PRODUCTO_REEMPLAZO=' || :NEW.ID_PRODUCTO_REEMPLAZO
-                  || ', ID_NOTA_CREDITO=' || :NEW.ID_NOTA_CREDITO
                   || ', FECHA_RECLAMO=' || TO_CHAR(:NEW.FECHA_RECLAMO, 'YYYY-MM-DD HH24:MI:SS')
                   || ', DESCRIPCION_FALLA=' || :NEW.DESCRIPCION_FALLA
                   || ', TIPO_RESOLUCION=' || :NEW.TIPO_RESOLUCION
@@ -1760,7 +1759,6 @@ BEGIN
                   || ', ID_DETALLE_FACTURA=' || :OLD.ID_DETALLE_FACTURA
                   || ', ID_EMPLEADO=' || :OLD.ID_EMPLEADO
                   || ', ID_PRODUCTO_REEMPLAZO=' || :OLD.ID_PRODUCTO_REEMPLAZO
-                  || ', ID_NOTA_CREDITO=' || :OLD.ID_NOTA_CREDITO
                   || ', FECHA_RECLAMO=' || TO_CHAR(:OLD.FECHA_RECLAMO, 'YYYY-MM-DD HH24:MI:SS')
                   || ', DESCRIPCION_FALLA=' || :OLD.DESCRIPCION_FALLA
                   || ', TIPO_RESOLUCION=' || :OLD.TIPO_RESOLUCION

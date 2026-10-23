@@ -307,7 +307,8 @@ CREATE OR REPLACE PACKAGE BODY PKG_VENTAS AS
         SELECT NVL(SUM(TOTAL), 0) INTO v_total
         FROM FACTURA
         WHERE TRUNC(FECHA) BETWEEN TRUNC(p_desde) AND TRUNC(p_hasta)
-          AND (p_id_sucursal IS NULL OR ID_SUCURSAL = p_id_sucursal);
+          AND (p_id_sucursal IS NULL OR ID_SUCURSAL = p_id_sucursal)
+          AND ID_ESTADO <> FN_ID_ESTADO('FACTURA', 'NC_TOTAL');
 
         RETURN v_total;
     END FN_TOTAL_VENDIDO;
@@ -319,7 +320,8 @@ CREATE OR REPLACE PACKAGE BODY PKG_VENTAS AS
         SELECT COUNT(*) INTO v_numero
         FROM FACTURA
         WHERE TRUNC(FECHA) BETWEEN TRUNC(p_desde) AND TRUNC(p_hasta)
-          AND (p_id_sucursal IS NULL OR ID_SUCURSAL = p_id_sucursal);
+          AND (p_id_sucursal IS NULL OR ID_SUCURSAL = p_id_sucursal)
+          AND ID_ESTADO <> FN_ID_ESTADO('FACTURA', 'NC_TOTAL');
 
         RETURN v_numero;
     END FN_NUMERO_FACTURAS;

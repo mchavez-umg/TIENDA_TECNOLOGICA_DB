@@ -117,6 +117,10 @@ BEGIN
         RAISE_APPLICATION_ERROR(-20021, 'El reclamo está fuera de la cobertura de garantía');
     END IF;
 
+    IF INSERTING AND FN_CANTIDAD_PENDIENTE_NC(:NEW.ID_DETALLE_FACTURA) = 0 THEN
+        RAISE_APPLICATION_ERROR(-20029, 'El producto ya fue devuelto con nota de crédito');
+    END IF;
+
     v_cambiada := FN_ID_ESTADO('GARANTIA', 'CAMBIADA');
 
     IF :NEW.ID_ESTADO = v_cambiada
