@@ -37,6 +37,10 @@ import { Notificacion } from '../notificacion.service';
     </mat-form-field>
   `,
   styles: `
+    :host {
+      display: block;
+      padding-top: 8px;
+    }
     .opcion {
       display: flex;
       flex-direction: column;

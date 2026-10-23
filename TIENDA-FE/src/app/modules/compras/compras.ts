@@ -75,7 +75,7 @@ export class Compras {
       { campo: 'fecha', titulo: 'Fecha', tipo: 'fecha' },
       { campo: 'proveedor', titulo: 'Proveedor' },
       { campo: 'sucursal', titulo: 'Sucursal' },
-      { campo: 'noDocumento', titulo: 'Documento' },
+      { campo: 'noDocumento', titulo: 'Documento', clase: 'col-codigo' },
       { campo: 'total', titulo: 'Total', tipo: 'moneda' },
       { campo: 'estado', titulo: 'Estado', tipo: 'estado' },
     ],

@@ -175,7 +175,7 @@
       }
 
       <div class="nuevo-pago">
-        <mat-form-field>
+        <mat-form-field class="campo-completo">
           <mat-label>Forma de pago</mat-label>
           <mat-select [value]="idFormaPago()" (selectionChange)="elegirForma($event.value)">
             @for (forma of formas(); track forma.idFormaPago) {
@@ -183,9 +183,8 @@
             }
           </mat-select>
         </mat-form-field>
-        <mat-form-field>
-          <mat-label>Monto</mat-label>
-          <span matTextPrefix>Q&nbsp;</span>
+        <mat-form-field class="campo-completo">
+          <mat-label>Monto (Q)</mat-label>
           <input
             #montoInput
             matInput

@@ -61,6 +61,7 @@
 
 .tabla {
   width: 100%;
+  min-width: 720px;
 
   .mat-mdc-header-cell {
     background: var(--app-superficie);
@@ -76,6 +77,7 @@
 
   .col-codigo {
     width: 110px;
+    white-space: nowrap;
     font-variant-numeric: tabular-nums;
   }
 

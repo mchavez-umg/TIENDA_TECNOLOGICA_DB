@@ -53,7 +53,9 @@
                 <span [class.lider]="primera" [style.width.%]="sucursal.barra"></span>
               </div>
               <div class="ranking-detalle">
-                <span>{{ sucursal.numeroFacturas | number }} facturas</span>
+                <span>
+                  {{ sucursal.numeroFacturas | number }} {{ sucursal.numeroFacturas === 1 ? 'factura' : 'facturas' }}
+                </span>
                 <span>{{ sucursal.participacion | number: '1.1-1' }} % del total</span>
               </div>
             </li>

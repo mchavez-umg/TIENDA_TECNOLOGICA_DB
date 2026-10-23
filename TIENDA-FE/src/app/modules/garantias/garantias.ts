@@ -52,7 +52,7 @@ export class Garantias {
     columnas: [
       { campo: 'idGarantia', titulo: 'No.', clase: 'col-codigo' },
       { campo: 'fechaReclamo', titulo: 'Fecha', tipo: 'fecha' },
-      { campo: 'factura', titulo: 'Factura' },
+      { campo: 'factura', titulo: 'Factura', clase: 'col-codigo' },
       { campo: 'cliente', titulo: 'Cliente' },
       { campo: 'producto', titulo: 'Producto' },
       { campo: 'estado', titulo: 'Estado', tipo: 'estado' },

@@ -34,7 +34,7 @@ export class NotasCredito {
     columnas: [
       { campo: 'numero', titulo: 'No.', clase: 'col-codigo' },
       { campo: 'fecha', titulo: 'Fecha', tipo: 'fecha' },
-      { campo: 'factura', titulo: 'Factura' },
+      { campo: 'factura', titulo: 'Factura', clase: 'col-codigo' },
       { campo: 'cliente', titulo: 'Cliente' },
       { campo: 'motivo', titulo: 'Motivo' },
       { campo: 'total', titulo: 'Total', tipo: 'moneda' },
