@@ -1,40 +1,89 @@
 <div class="login">
-  <mat-card appearance="outlined" class="tarjeta">
-    <header class="encabezado">
-      <mat-icon>storefront</mat-icon>
-      <div>
-        <h1>Tienda Tec</h1>
-        <p>Sistema administrativo</p>
-      </div>
-    </header>
+  <!-- Panel izquierdo: imagen + saludo -->
+  <section class="hero" aria-hidden="true">
+    <div class="hero-arte">
+      <mat-icon class="arte arte-laptop">laptop_mac</mat-icon>
+      <mat-icon class="arte arte-monitor">desktop_windows</mat-icon>
+      <mat-icon class="arte arte-celular">smartphone</mat-icon>
+      <mat-icon class="arte arte-audifonos">headphones</mat-icon>
+    </div>
 
-    <form class="formulario" [formGroup]="form" (ngSubmit)="ingresar()">
-      <mat-form-field>
-        <mat-label>Usuario</mat-label>
-        <input matInput formControlName="username" autocomplete="username" />
-        @if (form.controls.username.hasError('required')) {
-          <mat-error>Ingrese su usuario</mat-error>
-        }
-      </mat-form-field>
+    <div class="hero-texto">
+      <p class="hola">Hola,</p>
+      <p class="bienvenido">¡Bienvenido!</p>
+    </div>
 
-      <mat-form-field>
-        <mat-label>Contraseña</mat-label>
-        <input matInput type="password" formControlName="password" autocomplete="current-password" />
-        @if (form.controls.password.hasError('required')) {
-          <mat-error>Ingrese su contraseña</mat-error>
-        }
-      </mat-form-field>
+    <p class="hero-pie">
+      Administra productos, inventario y ventas de toda la cadena de tiendas desde un solo lugar.
+      Todo lo que necesitas, en un solo portal.
+    </p>
+  </section>
 
-      @if (error()) {
-        <div class="error" role="alert">
-          <mat-icon>error_outline</mat-icon>
-          <span>{{ error() }}</span>
+  <!-- Panel derecho: formulario -->
+  <section class="panel">
+    <div class="contenido">
+      <header class="marca">
+        <span class="marca-sup">Sistema administrativo</span>
+        <span class="marca-nombre">TIENDA TEC</span>
+      </header>
+
+      <form class="formulario" [formGroup]="form" (ngSubmit)="ingresar()" novalidate>
+        <div class="campo">
+          <label for="username">Código usuario<span class="req">*</span></label>
+          <div class="entrada" [class.invalida]="invalido('username')">
+            <mat-icon>person</mat-icon>
+            <input
+              id="username"
+              formControlName="username"
+              autocomplete="username"
+              [attr.aria-invalid]="invalido('username')"
+            />
+          </div>
+          @if (invalido('username')) {
+            <small class="msg-error">Ingrese su usuario</small>
+          }
         </div>
-      }
 
-      <button mat-flat-button type="submit" class="ingresar" [disabled]="cargando()">
-        {{ cargando() ? 'Ingresando…' : 'Ingresar' }}
-      </button>
-    </form>
-  </mat-card>
+        <div class="campo">
+          <label for="password">Contraseña<span class="req">*</span></label>
+          <div class="entrada" [class.invalida]="invalido('password')">
+            <mat-icon>key</mat-icon>
+            <input
+              id="password"
+              [type]="verPassword() ? 'text' : 'password'"
+              formControlName="password"
+              autocomplete="current-password"
+              [attr.aria-invalid]="invalido('password')"
+            />
+            <button
+              type="button"
+              class="ver"
+              [attr.aria-label]="verPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+              (click)="verPassword.set(!verPassword())"
+            >
+              <mat-icon>{{ verPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+          @if (invalido('password')) {
+            <small class="msg-error">Ingrese su contraseña</small>
+          }
+        </div>
+
+        @if (error()) {
+          <div class="error" role="alert">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ error() }}</span>
+          </div>
+        }
+
+        <div class="acciones">
+          <button type="submit" class="ingresar" [disabled]="cargando()">
+            {{ cargando() ? 'Ingresando…' : 'Ingresar' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <footer class="pie">UMG · Base de Datos I · 2026</footer>
+  </section>
 </div>

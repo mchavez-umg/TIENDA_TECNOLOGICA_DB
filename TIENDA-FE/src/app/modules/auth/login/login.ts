@@ -1,38 +1,34 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { AuthService } from '../../../core/auth.service';
-import { mensajeError } from '../../../shared/notificacion.service';
+import { Notificacion, mensajeError } from '../../../shared/notificacion.service';
 
 @Component({
   selector: 'app-login',
-  imports: [
-    ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-  ],
+  imports: [ReactiveFormsModule, MatIconModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
 export class Login {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly notificacion = inject(Notificacion);
 
   protected readonly cargando = signal(false);
+  protected readonly verPassword = signal(false);
   protected readonly error = signal<string | null>(null);
   protected readonly form = inject(FormBuilder).nonNullable.group({
     username: ['', Validators.required],
     password: ['', Validators.required],
   });
+
+  protected invalido(campo: 'username' | 'password'): boolean {
+    const control = this.form.controls[campo];
+    return control.invalid && (control.touched || control.dirty);
+  }
 
   protected ingresar() {
     if (this.form.invalid) {
@@ -48,5 +44,9 @@ export class Login {
         next: () => this.router.navigateByUrl('/'),
         error: (error) => this.error.set(mensajeError(error)),
       });
+  }
+
+  protected recuperar() {
+    this.notificacion.exito('Comuníquese con el administrador del sistema para restablecer su contraseña.');
   }
 }
