@@ -934,6 +934,68 @@ BEGIN
 END;
 /
 
+CREATE OR REPLACE TRIGGER TRG_AJUSTE_INVENTARIO
+BEFORE INSERT OR UPDATE OR DELETE ON AJUSTE_INVENTARIO
+FOR EACH ROW
+DECLARE
+    v_operacion VARCHAR2(10);
+    v_antes     VARCHAR2(4000);
+    v_despues   VARCHAR2(4000);
+    v_total     NUMBER;
+BEGIN
+    IF INSERTING THEN
+        v_operacion := 'INSERT';
+        IF :NEW.ID_AJUSTE IS NULL THEN
+            :NEW.ID_AJUSTE := SEQ_AJUSTE_INVENTARIO.NEXTVAL;
+        END IF;
+        :NEW.CREADO_POR := NVL(SYS_CONTEXT('USERENV', 'CLIENT_IDENTIFIER'), USER);
+    ELSIF UPDATING THEN
+        v_operacion := 'UPDATE';
+        :NEW.FECHA_MODIFICACION := SYSDATE;
+        :NEW.MODIFICADO_POR := NVL(SYS_CONTEXT('USERENV', 'CLIENT_IDENTIFIER'), USER);
+    ELSE
+        v_operacion := 'DELETE';
+    END IF;
+
+    IF INSERTING OR UPDATING THEN
+        SELECT COUNT(*) INTO v_total
+        FROM ESTADO
+        WHERE ID_ESTADO = :NEW.ID_ESTADO
+          AND ENTIDAD = 'AJUSTE_INVENTARIO';
+        IF v_total = 0 THEN
+            RAISE_APPLICATION_ERROR(-20001, 'El estado no pertenece a AJUSTE_INVENTARIO');
+        END IF;
+    END IF;
+
+    IF INSERTING OR UPDATING THEN
+        v_despues := 'ID_AJUSTE=' || :NEW.ID_AJUSTE
+                  || ', ID_SUCURSAL=' || :NEW.ID_SUCURSAL
+                  || ', ID_PRODUCTO=' || :NEW.ID_PRODUCTO
+                  || ', ID_EMPLEADO=' || :NEW.ID_EMPLEADO
+                  || ', TIPO_AJUSTE=' || :NEW.TIPO_AJUSTE
+                  || ', CANTIDAD=' || :NEW.CANTIDAD
+                  || ', MOTIVO=' || :NEW.MOTIVO
+                  || ', FECHA=' || TO_CHAR(:NEW.FECHA, 'YYYY-MM-DD HH24:MI:SS')
+                  || ', ID_ESTADO=' || :NEW.ID_ESTADO;
+    END IF;
+
+    IF UPDATING OR DELETING THEN
+        v_antes := 'ID_AJUSTE=' || :OLD.ID_AJUSTE
+                  || ', ID_SUCURSAL=' || :OLD.ID_SUCURSAL
+                  || ', ID_PRODUCTO=' || :OLD.ID_PRODUCTO
+                  || ', ID_EMPLEADO=' || :OLD.ID_EMPLEADO
+                  || ', TIPO_AJUSTE=' || :OLD.TIPO_AJUSTE
+                  || ', CANTIDAD=' || :OLD.CANTIDAD
+                  || ', MOTIVO=' || :OLD.MOTIVO
+                  || ', FECHA=' || TO_CHAR(:OLD.FECHA, 'YYYY-MM-DD HH24:MI:SS')
+                  || ', ID_ESTADO=' || :OLD.ID_ESTADO;
+    END IF;
+
+    INSERT INTO BITACORA_GENERAL (TABLA, OPERACION, ID_REGISTRO, VALORES_ANTERIORES, VALORES_NUEVOS)
+    VALUES ('AJUSTE_INVENTARIO', v_operacion, NVL(:NEW.ID_AJUSTE, :OLD.ID_AJUSTE), v_antes, v_despues);
+END;
+/
+
 CREATE OR REPLACE TRIGGER TRG_PROVEEDOR
 BEFORE INSERT OR UPDATE OR DELETE ON PROVEEDOR
 FOR EACH ROW

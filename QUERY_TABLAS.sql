@@ -14,6 +14,7 @@ BEGIN
                                                                       'DETALLE_COMPRA',
                                                                       'COMPRA',
                                                                       'PROVEEDOR',
+                                                                      'AJUSTE_INVENTARIO',
                                                                       'KARDEX',
                                                                       'INVENTARIO',
                                                                       'PRODUCTO',
@@ -107,6 +108,8 @@ INSERT INTO ESTADO (ID_ESTADO, ENTIDAD, CODIGO, NOMBRE) VALUES (49, 'GARANTIA', 
 INSERT INTO ESTADO (ID_ESTADO, ENTIDAD, CODIGO, NOMBRE) VALUES (50, 'GARANTIA', 'CAMBIADA', 'Cambiada');
 INSERT INTO ESTADO (ID_ESTADO, ENTIDAD, CODIGO, NOMBRE) VALUES (51, 'GARANTIA', 'RECHAZADA', 'Rechazada');
 INSERT INTO ESTADO (ID_ESTADO, ENTIDAD, CODIGO, NOMBRE) VALUES (52, 'GARANTIA', 'ENTREGADA', 'Entregada');
+INSERT INTO ESTADO (ID_ESTADO, ENTIDAD, CODIGO, NOMBRE) VALUES (53, 'AJUSTE_INVENTARIO', 'APLICADO', 'Aplicado');
+INSERT INTO ESTADO (ID_ESTADO, ENTIDAD, CODIGO, NOMBRE) VALUES (54, 'AJUSTE_INVENTARIO', 'ANULADO', 'Anulado');
 COMMIT;
 
 CREATE TABLE DEPARTAMENTO (
@@ -468,6 +471,34 @@ CREATE TABLE KARDEX (
 COMMENT ON TABLE KARDEX IS 'Historial de movimientos de inventario';
 CREATE INDEX IX_KAR_SUCURSAL ON KARDEX (ID_SUCURSAL);
 CREATE INDEX IX_KAR_PRODUCTO ON KARDEX (ID_PRODUCTO);
+
+CREATE TABLE AJUSTE_INVENTARIO (
+                                   ID_AJUSTE           NUMBER(10)     NOT NULL,
+                                   ID_SUCURSAL         NUMBER(10)     NOT NULL,
+                                   ID_PRODUCTO         NUMBER(10)     NOT NULL,
+                                   ID_EMPLEADO         NUMBER(10)     NOT NULL,
+                                   TIPO_AJUSTE         VARCHAR2(10)   NOT NULL,
+                                   CANTIDAD            NUMBER(8)      NOT NULL,
+                                   MOTIVO              VARCHAR2(200)  NOT NULL,
+                                   FECHA               DATE           DEFAULT SYSDATE NOT NULL,
+                                   ID_ESTADO           NUMBER(10)     NOT NULL,
+                                   FECHA_CREACION      DATE           DEFAULT SYSDATE NOT NULL,
+                                   CREADO_POR          VARCHAR2(30)   DEFAULT USER NOT NULL,
+                                   FECHA_MODIFICACION  DATE,
+                                   MODIFICADO_POR      VARCHAR2(30),
+                                   CONSTRAINT PK_AJUSTE_INVENTARIO PRIMARY KEY (ID_AJUSTE),
+                                   CONSTRAINT CK_AJU_01 CHECK (TIPO_AJUSTE IN ('ENTRADA','SALIDA')),
+                                   CONSTRAINT CK_AJU_02 CHECK (CANTIDAD > 0),
+                                   CONSTRAINT FK_AJU_SUCURSAL FOREIGN KEY (ID_SUCURSAL) REFERENCES SUCURSAL (ID_SUCURSAL),
+                                   CONSTRAINT FK_AJU_PRODUCTO FOREIGN KEY (ID_PRODUCTO) REFERENCES PRODUCTO (ID_PRODUCTO),
+                                   CONSTRAINT FK_AJU_EMPLEADO FOREIGN KEY (ID_EMPLEADO) REFERENCES EMPLEADO (ID_EMPLEADO),
+                                   CONSTRAINT FK_AJU_ESTADO FOREIGN KEY (ID_ESTADO) REFERENCES ESTADO (ID_ESTADO)
+);
+
+COMMENT ON TABLE AJUSTE_INVENTARIO IS 'Ajustes de inventario (entrada o salida) con su motivo';
+CREATE INDEX IX_AJU_SUCURSAL ON AJUSTE_INVENTARIO (ID_SUCURSAL);
+CREATE INDEX IX_AJU_PRODUCTO ON AJUSTE_INVENTARIO (ID_PRODUCTO);
+CREATE INDEX IX_AJU_EMPLEADO ON AJUSTE_INVENTARIO (ID_EMPLEADO);
 
 CREATE TABLE PROVEEDOR (
                            ID_PROVEEDOR        NUMBER(10)     NOT NULL,
