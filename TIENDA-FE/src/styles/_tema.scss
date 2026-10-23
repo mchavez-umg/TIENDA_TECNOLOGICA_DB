@@ -1,0 +1,63 @@
+@use '@angular/material' as mat;
+
+:root {
+  --app-navy: #1f2a44;
+  --app-navy-hover: #2a3757;
+  --app-navy-borde: #2f3b58;
+  --app-navy-texto: #c3cbdb;
+  --app-acento: #4f8ef7;
+  --app-fondo: #f4f6f8;
+  --app-borde: #e1e5ea;
+  --app-texto: #1b2230;
+  --app-texto-sec: #5b6475;
+  --app-cabecera-tabla: #f8f9fb;
+  --app-exito: #1e6b45;
+  --app-exito-fondo: #e3f2e9;
+  --app-inactivo: #5b6475;
+  --app-inactivo-fondo: #eceff3;
+  --app-error: #a4262c;
+  --app-error-fondo: #fdecec;
+}
+
+html {
+  color-scheme: light;
+
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        theme-type: light,
+      ),
+      typography: Roboto,
+      density: -2,
+    )
+  );
+
+  @include mat.button-overrides(
+    (
+      filled-container-shape: 6px,
+      outlined-container-shape: 6px,
+      text-container-shape: 6px,
+      protected-container-shape: 6px,
+    )
+  );
+
+  @include mat.card-overrides(
+    (
+      outlined-container-shape: 8px,
+      outlined-outline-color: var(--app-borde),
+    )
+  );
+
+  @include mat.dialog-overrides(
+    (
+      container-shape: 8px,
+    )
+  );
+
+  @include mat.sidenav-overrides(
+    (
+      container-shape: 0,
+    )
+  );
+}
