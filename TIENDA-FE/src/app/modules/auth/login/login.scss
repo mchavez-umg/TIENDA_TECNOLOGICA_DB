@@ -15,8 +15,12 @@
   justify-content: space-between;
   gap: 48px;
   padding: 48px 56px 40px;
-  background: var(--app-navy);
+  background:
+    linear-gradient(rgb(15 23 42 / 0.75), rgb(15 23 42 / 0.85)),
+    url('/login.jpg') center / cover no-repeat,
+    var(--app-navy);
   color: #fff;
+
 }
 
 .marca {
