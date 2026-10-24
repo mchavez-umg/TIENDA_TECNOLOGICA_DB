@@ -29,7 +29,6 @@ public class SucursalController {
     }
 
     @GetMapping
-    @PreAuthorize("@permisos.puede('" + RUTA + "', 'C')")
     public List<SucursalService.SucursalResponse> listar() {
         return sucursalService.listar();
     }

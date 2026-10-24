@@ -41,8 +41,14 @@ class SucursalControllerTests {
     }
 
     @Test
-    void listarSinPermisoDevuelve403() throws Exception {
+    void listarAutenticadoSinPermisoDevuelve200() throws Exception {
         mvc.perform(get("/api/sucursales").header("Authorization", "Bearer " + token()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void obtenerSinPermisoDevuelve403() throws Exception {
+        mvc.perform(get("/api/sucursales/1").header("Authorization", "Bearer " + token()))
                 .andExpect(status().isForbidden());
     }
 
