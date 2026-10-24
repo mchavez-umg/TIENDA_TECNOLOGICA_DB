@@ -66,6 +66,14 @@ public class FormaPagoService {
         }
     }
 
+    public void activar(long id) {
+        int filas = jdbc.update(
+                "UPDATE FORMA_PAGO SET ID_ESTADO = FN_ID_ESTADO('FORMA_PAGO', 'A') WHERE ID_FORMA_PAGO = ?", id);
+        if (filas == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Forma de pago no encontrada");
+        }
+    }
+
     public record FormaPagoResponse(long idFormaPago, String nombre, String requiereReferencia, String estado) {
     }
 }

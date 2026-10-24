@@ -59,4 +59,11 @@ public class OpcionMenuController {
         opcionMenuService.desactivar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/activar")
+    @PreAuthorize("@permisos.puede('" + RUTA + "', 'B')")
+    public ResponseEntity<Void> activar(@PathVariable long id) {
+        opcionMenuService.activar(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -65,6 +65,14 @@ public class CategoriaService {
         }
     }
 
+    public void activar(long id) {
+        int filas = jdbc.update(
+                "UPDATE CATEGORIA SET ID_ESTADO = FN_ID_ESTADO('CATEGORIA', 'A') WHERE ID_CATEGORIA = ?", id);
+        if (filas == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoría no encontrada");
+        }
+    }
+
     public record CategoriaResponse(long idCategoria, String nombre, String descripcion, String estado) {
     }
 }

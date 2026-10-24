@@ -72,6 +72,14 @@ public class OpcionMenuService {
         }
     }
 
+    public void activar(long id) {
+        int filas = jdbc.update(
+                "UPDATE OPCION_MENU SET ID_ESTADO = FN_ID_ESTADO('OPCION_MENU', 'A') WHERE ID_OPCION = ?", id);
+        if (filas == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Opción de menú no encontrada");
+        }
+    }
+
     public record OpcionMenuResponse(long idOpcion, Long idOpcionPadre, String padre, String nombre, String ruta,
                                      String icono, int orden, String estado) {
     }

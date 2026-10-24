@@ -62,6 +62,14 @@ public class MarcaService {
         }
     }
 
+    public void activar(long id) {
+        int filas = jdbc.update(
+                "UPDATE MARCA SET ID_ESTADO = FN_ID_ESTADO('MARCA', 'A') WHERE ID_MARCA = ?", id);
+        if (filas == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Marca no encontrada");
+        }
+    }
+
     public record MarcaResponse(long idMarca, String nombre, String estado) {
     }
 }

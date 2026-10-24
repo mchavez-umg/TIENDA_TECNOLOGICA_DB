@@ -83,6 +83,14 @@ public class EmpleadoService {
         }
     }
 
+    public void activar(long id) {
+        int filas = jdbc.update(
+                "UPDATE EMPLEADO SET ID_ESTADO = FN_ID_ESTADO('EMPLEADO', 'A') WHERE ID_EMPLEADO = ?", id);
+        if (filas == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Empleado no encontrado");
+        }
+    }
+
     public record EmpleadoResponse(long idEmpleado, long idSucursal, String sucursal, long idPuesto, String puesto,
                                    String dpi, String nombres, String apellidos, String telefono, String correo,
                                    String direccion, LocalDate fechaIngreso, String estado) {

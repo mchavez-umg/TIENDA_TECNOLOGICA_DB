@@ -80,6 +80,14 @@ public class ProductoService {
         }
     }
 
+    public void activar(long id) {
+        int filas = jdbc.update(
+                "UPDATE PRODUCTO SET ID_ESTADO = FN_ID_ESTADO('PRODUCTO', 'A') WHERE ID_PRODUCTO = ?", id);
+        if (filas == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado");
+        }
+    }
+
     public record ProductoResponse(long idProducto, long idCategoria, String categoria, long idMarca, String marca,
                                    String codigo, String nombre, String descripcion, BigDecimal precioCosto,
                                    BigDecimal precioVenta, int mesesGarantia, String estado) {

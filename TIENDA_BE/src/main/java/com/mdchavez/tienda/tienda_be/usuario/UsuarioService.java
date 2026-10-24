@@ -82,6 +82,13 @@ public class UsuarioService {
         }
     }
 
+    public void activar(long id) {
+        int filas = jdbc.update("UPDATE USUARIO SET ID_ESTADO = FN_ID_ESTADO('USUARIO', 'A'), INTENTOS_FALLIDOS = 0 WHERE ID_USUARIO = ?", id);
+        if (filas == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
+        }
+    }
+
     public record UsuarioResponse(long idUsuario, long idEmpleado, String empleado, long idRol, String rol,
                                   String username, int intentosFallidos, LocalDateTime ultimoAcceso, String estado) {
     }

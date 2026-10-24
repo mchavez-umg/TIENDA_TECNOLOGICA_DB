@@ -62,6 +62,13 @@ public class RolService {
         }
     }
 
+    public void activar(long id) {
+        int filas = jdbc.update("UPDATE ROL SET ID_ESTADO = FN_ID_ESTADO('ROL', 'A') WHERE ID_ROL = ?", id);
+        if (filas == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Rol no encontrado");
+        }
+    }
+
     public record RolResponse(long idRol, String nombre, String descripcion, String estado) {
     }
 }

@@ -60,4 +60,11 @@ public class AsignacionHorarioController {
         asignacionService.desactivar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/activar")
+    @PreAuthorize("@permisos.puede('" + RUTA + "', 'B')")
+    public ResponseEntity<Void> activar(@PathVariable long id) {
+        asignacionService.activar(id);
+        return ResponseEntity.noContent().build();
+    }
 }

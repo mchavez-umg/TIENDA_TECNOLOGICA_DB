@@ -77,6 +77,14 @@ public class SucursalService {
         }
     }
 
+    public void activar(long id) {
+        int filas = jdbc.update(
+                "UPDATE SUCURSAL SET ID_ESTADO = FN_ID_ESTADO('SUCURSAL', 'A') WHERE ID_SUCURSAL = ?", id);
+        if (filas == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sucursal no encontrada");
+        }
+    }
+
     public record SucursalResponse(long idSucursal, long idMunicipio, String municipio, String codigo, String nombre,
                                    String direccion, String telefono, String correo, LocalDate fechaApertura,
                                    String estado) {

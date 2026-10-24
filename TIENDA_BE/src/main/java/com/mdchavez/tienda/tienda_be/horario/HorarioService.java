@@ -67,6 +67,14 @@ public class HorarioService {
         }
     }
 
+    public void activar(long id) {
+        int filas = jdbc.update(
+                "UPDATE HORARIO SET ID_ESTADO = FN_ID_ESTADO('HORARIO', 'A') WHERE ID_HORARIO = ?", id);
+        if (filas == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Horario no encontrado");
+        }
+    }
+
     public record HorarioResponse(long idHorario, String nombre, String horaEntrada, String horaSalida,
                                   String diasSemana, String estado) {
     }

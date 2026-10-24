@@ -26,4 +26,8 @@ export abstract class CrudService<T> {
   desactivar(id: number) {
     return this.http.delete<void>(`${this.url}/${id}`);
   }
+
+  activar(id: number) {
+    return this.http.put<void>(`${this.url}/${id}/activar`, null);
+  }
 }

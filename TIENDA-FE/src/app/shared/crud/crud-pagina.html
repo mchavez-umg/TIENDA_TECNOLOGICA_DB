@@ -118,6 +118,16 @@
               <mat-icon>block</mat-icon>
             </button>
           }
+          @if (desactivable() && puede('puedeEliminar') && fila.estado !== 'Activo') {
+            <button
+              mat-icon-button
+              matTooltip="Activar"
+              [attr.aria-label]="'Activar ' + etiqueta(fila)"
+              (click)="activar(fila)"
+            >
+              <mat-icon>check_circle</mat-icon>
+            </button>
+          }
         </td>
       </ng-container>
 

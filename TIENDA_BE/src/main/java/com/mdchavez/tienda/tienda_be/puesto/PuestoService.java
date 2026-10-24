@@ -67,6 +67,14 @@ public class PuestoService {
         }
     }
 
+    public void activar(long id) {
+        int filas = jdbc.update(
+                "UPDATE PUESTO SET ID_ESTADO = FN_ID_ESTADO('PUESTO', 'A') WHERE ID_PUESTO = ?", id);
+        if (filas == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Puesto no encontrado");
+        }
+    }
+
     public record PuestoResponse(long idPuesto, String nombre, String descripcion, BigDecimal salarioBase,
                                  String estado) {
     }

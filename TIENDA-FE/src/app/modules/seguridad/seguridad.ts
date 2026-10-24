@@ -31,6 +31,7 @@ export class Usuarios {
     servicio: this.servicio,
     id: 'idUsuario',
     etiqueta: (u) => u.username,
+    tonoEstado: (estado) => (estado === 'Activo' ? 'exito' : estado === 'Bloqueado' ? 'aviso' : 'inactivo'),
     columnas: [
       { campo: 'username', titulo: 'Usuario' },
       { campo: 'empleado', titulo: 'Empleado' },

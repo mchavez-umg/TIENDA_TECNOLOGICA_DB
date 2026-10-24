@@ -72,6 +72,14 @@ public class MunicipioService {
         }
     }
 
+    public void activar(long id) {
+        int filas = jdbc.update(
+                "UPDATE MUNICIPIO SET ID_ESTADO = FN_ID_ESTADO('MUNICIPIO', 'A') WHERE ID_MUNICIPIO = ?", id);
+        if (filas == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Municipio no encontrado");
+        }
+    }
+
     private static String cabecera(MunicipioRequest req) {
         return req.esCabecera() != null ? req.esCabecera() : "N";
     }

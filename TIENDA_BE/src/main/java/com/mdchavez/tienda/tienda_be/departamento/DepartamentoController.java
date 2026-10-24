@@ -59,4 +59,11 @@ public class DepartamentoController {
         departamentoService.desactivar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/activar")
+    @PreAuthorize("@permisos.puede('" + RUTA + "', 'B')")
+    public ResponseEntity<Void> activar(@PathVariable long id) {
+        departamentoService.activar(id);
+        return ResponseEntity.noContent().build();
+    }
 }

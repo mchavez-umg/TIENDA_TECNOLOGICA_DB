@@ -62,6 +62,14 @@ public class DepartamentoService {
         }
     }
 
+    public void activar(long id) {
+        int filas = jdbc.update(
+                "UPDATE DEPARTAMENTO SET ID_ESTADO = FN_ID_ESTADO('DEPARTAMENTO', 'A') WHERE ID_DEPARTAMENTO = ?", id);
+        if (filas == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Departamento no encontrado");
+        }
+    }
+
     public record DepartamentoResponse(long idDepartamento, String nombre, String estado) {
     }
 }

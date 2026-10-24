@@ -78,6 +78,14 @@ public class AsignacionHorarioService {
         }
     }
 
+    public void activar(long id) {
+        int filas = jdbc.update("UPDATE EMPLEADO_HORARIO SET ID_ESTADO = FN_ID_ESTADO('EMPLEADO_HORARIO', 'A') "
+                + "WHERE ID_EMPLEADO_HORARIO = ?", id);
+        if (filas == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Asignación no encontrada");
+        }
+    }
+
     public record AsignacionResponse(long idEmpleadoHorario, long idEmpleado, String empleado, long idHorario,
                                      String horario, LocalDate fechaInicio, LocalDate fechaFin, String estado) {
     }

@@ -177,6 +177,27 @@ export class CrudPagina implements OnInit, AfterViewInit {
       });
   }
 
+  protected activar(fila: Fila) {
+    const config = this.config();
+    this.confirmacion
+      .preguntar({
+        titulo: `Activar ${config.singular}`,
+        mensaje: `¿Desea activar "${this.etiqueta(fila)}"? Volverá a aparecer en las listas de selección.`,
+        accion: 'Activar',
+      })
+      .pipe(
+        filter(Boolean),
+        switchMap(() => config.servicio.activar(fila[config.id])),
+      )
+      .subscribe({
+        next: () => {
+          this.notificacion.exito(`${this.nombre()} activad${this.articulo()}`);
+          this.cargar();
+        },
+        error: (error) => this.notificacion.error(error),
+      });
+  }
+
   protected readonly recargar = () => this.cargar();
 
   protected cargar() {

@@ -70,6 +70,14 @@ public class ProveedorService {
         }
     }
 
+    public void activar(long id) {
+        int filas = jdbc.update(
+                "UPDATE PROVEEDOR SET ID_ESTADO = FN_ID_ESTADO('PROVEEDOR', 'A') WHERE ID_PROVEEDOR = ?", id);
+        if (filas == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Proveedor no encontrado");
+        }
+    }
+
     public record ProveedorResponse(long idProveedor, String nit, String nombre, String contacto, String telefono,
                                     String correo, String direccion, String estado) {
     }

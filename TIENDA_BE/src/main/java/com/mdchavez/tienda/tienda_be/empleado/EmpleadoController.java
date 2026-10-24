@@ -60,4 +60,11 @@ public class EmpleadoController {
         empleadoService.desactivar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/activar")
+    @PreAuthorize("@permisos.puede('" + RUTA + "', 'B')")
+    public ResponseEntity<Void> activar(@PathVariable long id) {
+        empleadoService.activar(id);
+        return ResponseEntity.noContent().build();
+    }
 }

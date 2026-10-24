@@ -70,6 +70,14 @@ public class ClienteService {
         }
     }
 
+    public void activar(long id) {
+        int filas = jdbc.update(
+                "UPDATE CLIENTE SET ID_ESTADO = FN_ID_ESTADO('CLIENTE', 'A') WHERE ID_CLIENTE = ?", id);
+        if (filas == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado");
+        }
+    }
+
     public record ClienteResponse(long idCliente, String nit, String nombres, String apellidos, String telefono,
                                   String correo, String direccion, String estado) {
     }

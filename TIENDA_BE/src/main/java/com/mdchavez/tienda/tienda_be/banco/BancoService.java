@@ -62,6 +62,14 @@ public class BancoService {
         }
     }
 
+    public void activar(long id) {
+        int filas = jdbc.update(
+                "UPDATE BANCO SET ID_ESTADO = FN_ID_ESTADO('BANCO', 'A') WHERE ID_BANCO = ?", id);
+        if (filas == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Banco no encontrado");
+        }
+    }
+
     public record BancoResponse(long idBanco, String nombre, String estado) {
     }
 }

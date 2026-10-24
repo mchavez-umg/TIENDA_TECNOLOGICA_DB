@@ -58,4 +58,11 @@ public class SucursalController {
         sucursalService.desactivar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/activar")
+    @PreAuthorize("@permisos.puede('" + RUTA + "', 'B')")
+    public ResponseEntity<Void> activar(@PathVariable long id) {
+        sucursalService.activar(id);
+        return ResponseEntity.noContent().build();
+    }
 }
